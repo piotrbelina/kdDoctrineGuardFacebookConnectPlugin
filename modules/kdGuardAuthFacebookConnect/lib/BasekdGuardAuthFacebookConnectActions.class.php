@@ -38,10 +38,16 @@ class BasekdGuardAuthFacebookConnectActions extends sfGuardAuthActions {
     
     $url = $this->getContext()->getRouting()->generate('sf_guard_signout', array(), true);
     
-    if ($facebook->getSession()) {
+    if ($facebook->getUser()) {
       $url = $facebook->getLogoutUrl(array (
         'next' => $url
       ));
+      
+      $this->getUser()->signOut();
+      
+      session_unregister('fb_' . $facebook->getAppId() . '_user_id');
+      session_unregister('fb_' . $facebook->getAppId() . '_access_token');
+      session_unregister('fb_' . $facebook->getAppId() . '_user_id');
       
       $this->redirect($url);
     }

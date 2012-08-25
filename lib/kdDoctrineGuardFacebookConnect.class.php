@@ -27,11 +27,8 @@ class kdDoctrineGuardFacebookConnect {
      */
     public static function getFacebook() {
         if (null === self::$facebook) {
-            self::$facebook = new Facebook(array(
-                        'appId' => sfConfig::get('app_facebook_appId'),
-                        'secret' => sfConfig::get('app_facebook_secret'),
-                        'cookie' => sfConfig::get('app_facebook_cookie'),
-                    ));
+            $config = sfConfig::get('app_facebook_' . $_SERVER['SERVER_NAME']);
+            self::$facebook = new Facebook($config);
         }
 
         return self::$facebook;

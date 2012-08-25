@@ -25,16 +25,18 @@ class kdDoctrineGuardFacebookConnectFilter extends sfFilter {
       $facebook = kdDoctrineGuardFacebookConnect::getFacebook();
 
       $uid = $facebook->getUser();
-      try {
-        $me = $facebook->api('/me');
+      if ($uid) {
+        try {
+          $me = $facebook->api('/me');
 
-        if ($me) {
-          $sfGuardUser = kdDoctrineGuardFacebookConnect::updateOrCreateUser($me);
+          if ($me) {
+            $sfGuardUser = kdDoctrineGuardFacebookConnect::updateOrCreateUser($me);
 
-          $this->context->getUser()->signIn($sfGuardUser);
+            $this->context->getUser()->signIn($sfGuardUser);
+          }
+        } catch (FacebookApiException $ex) {
+          $this->getContext()->getLogger()->err($ex);
         }
-      } catch (FacebookApiException $ex) {
-        $this->getContext()->getLogger()->err($ex);
       }
     }
 
